@@ -1,14 +1,14 @@
 name: CI Pipeline
 
-on:                     # Cuándo se ejecuta
+on:
   push:
-    branches: [ main ]  # Solo cuando hay un push en main
+    branches: [ main ]
   pull_request:
     branches: [ main ]
 
-jobs:                   # Qué tareas ejecuta
+jobs:
   build:
-    runs-on: ubuntu-latest  # Máquina virtual de GitHub
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
@@ -19,9 +19,6 @@ jobs:                   # Qué tareas ejecuta
         with:
           node-version: '20'
 
-      - name: Install dependencies (root)
-        run: npm install
-
       - name: Install client dependencies
         working-directory: ./client
         run: npm install
@@ -31,4 +28,5 @@ jobs:                   # Qué tareas ejecuta
         run: npm run build
 
       - name: Run tests
+        working-directory: ./client
         run: npm test
