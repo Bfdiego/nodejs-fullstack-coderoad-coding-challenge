@@ -1,6 +1,7 @@
 import express, { Request, Response, NextFunction, Application } from 'express';
 import fs from 'fs/promises';
 import path from 'path';
+import cors from 'cors';
 
 interface Item {
   id: number;
@@ -17,6 +18,7 @@ const app: Application = express();
 const PORT: number = parseInt(process.env.PORT || '4000', 10);
 const DB_PATH: string = path.join(__dirname, '..', 'db.json');
 
+app.use(cors());
 app.use(express.json());
 
 // helper: read DB
@@ -37,7 +39,16 @@ async function writeDB(data: Database): Promise<void> {
 
 // list items
 app.get('/api/items', async (req: Request, res: Response): Promise<void> => {
-  res.json({coderoad: 'rocks🚀'})
+  try {
+    const db: Database = await readDB();
+    // console.log(db);
+    const { items } = db;
+    res.status(200).json({data: items});
+  } catch (error) {
+    res.status(500).json({
+      message: 'Internal Server Error'
+    })
+  }
   // PUT YOUR CODE HERE
 });
 
